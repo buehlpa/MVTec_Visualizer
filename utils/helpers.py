@@ -5,12 +5,19 @@ import numpy as np
 
 def sample_synthetic_norm(torch_array):
     
-    means=torch_array.mean(dim=0)
+    #means=torch_array.mean(dim=0)
+    
+    means=torch.zeros(torch_array.size(1))
     stds=torch.sqrt(torch_array.var(dim=0))
     rows = []
     for _ in range(30):
-        row = torch.normal(means, stds)
+        
+        random_row = torch_array[torch.randint(0, torch_array.size(0), (1,)).item()]
+        row = random_row+torch.normal(means, stds)
+        
+        
         rows.append(row)
+        
     new_samples = torch.stack(rows)
     return new_samples
 
@@ -56,7 +63,10 @@ def create_synset_for_class(category:str,df,sampler=sample_synthetic_norm):
         all_data.append(torch_array)
         class_list.append(anocat)
         
+        
+
         new_samples=sampler(torch_array)
+        
         
         all_data.append(new_samples)
         class_list.append(anocat+'_synthetic')
