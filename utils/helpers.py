@@ -51,7 +51,8 @@ def create_synset_for_class(category:str,df,sampler=sample_synthetic_norm):
     df_category = df[df.index.str.contains(category)]
 
     all_data=[]
-    all_data.append(torch.Tensor(df_category.to_numpy()))
+    all_data.append(torch.Tensor(df_category[df_category.index.str.contains('good')].to_numpy()))
+    
     class_list=[category]
 
     for anocat in anomaly_categories[category]:
