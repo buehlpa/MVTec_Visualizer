@@ -1,4 +1,5 @@
-## MVTEC dataset
+## MVTEC AD
+dataset from https://www.mvtec.com/company/research/datasets/mvtec-ad/
 
 - visualize data in embeddingspace on tensorboard with TSNE, UMAP and PCA
 - Clip embeddings and Wideresnet50 embeddings
