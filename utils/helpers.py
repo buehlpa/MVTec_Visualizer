@@ -8,9 +8,11 @@ from torch.utils.data import TensorDataset, DataLoader
 
 
 # sample synthetic 
-def sample_synthetic_norm(torch_array,n_synthetic=30):
+def sample_synthetic_add_gauss(torch_array,n_synthetic=30):
+    # sampling from test set an add gaussian noise to it
     
-    #means=torch_array.mean(dim=0)
+    # test with shift
+    # shift=torch.full((torch_array.size(1),), 0.1)
     
     means=torch.zeros(torch_array.size(1))
     stds=torch.sqrt(torch_array.var(dim=0))
@@ -18,21 +20,43 @@ def sample_synthetic_norm(torch_array,n_synthetic=30):
     for _ in range(n_synthetic):
         
         random_row = torch_array[torch.randint(0, torch_array.size(0), (1,)).item()]
-        row = random_row+torch.normal(means, stds)
         
+        
+        #test with shift
+        #row=random_row+shift
+        
+        row = random_row+torch.normal(means, stds)
         
         rows.append(row)
         
     new_samples = torch.stack(rows)
     return new_samples
 
+def sample_synthetic_norm(torch_array,n_synthetic=30):
+    # empirical variance and means -> sample from assummed multivariate normal distribution
+    
+    means=torch_array.mean(dim=0)
+    stds=torch.sqrt(torch_array.var(dim=0))
+    
+    rows = []
+    for _ in range(n_synthetic):
+        row = torch.normal(means, stds)
+        rows.append(row)
+        
+    new_samples = torch.stack(rows)
+    return new_samples
 
 
-def create_synset_for_class(category:str,df,n_synthetic=30,sampler=sample_synthetic_norm):
+def create_synset_for_class(category:str,df,n_synthetic=30,sampler="additive_0_mean_gauss"):
 
     # structure of combined_samples: ["good train and test!","anomaly","synthetic_anomaly","anomaly1","synthetic_anomaly1","anomaly2","synthetic_anomaly2".....]
     # zb category='bottle'
 
+    if sampler == "additive_0_mean_gauss":
+        sampler_function=sample_synthetic_add_gauss
+    
+    if sampler == "multivariate_gauss":
+        sampler_function=sample_synthetic_norm
 
     anomaly_categories = {
         'bottle': ['broken_large', 'broken_small', 'contamination'],
@@ -52,14 +76,14 @@ def create_synset_for_class(category:str,df,n_synthetic=30,sampler=sample_synthe
         'zipper': ['broken_teeth', 'combined','fabric_border', 'fabric_interior','split_teeth','rough', 'squeezed_teeth']}
 
 
-
     df_category = df[df.index.str.contains(category)]
 
     all_data=[]
+    # tensor with all good samples from train and test
     all_data.append(torch.Tensor(df_category[df_category.index.str.contains('good')].to_numpy()))
     
     class_list=[category]
-
+    # tensor with anomalies for the category , create anomalies for every subcategory
     for anocat in anomaly_categories[category]:
         df_subcategory = df_category[df_category.index.str.contains(anocat)]
         df_subcategory.head()
@@ -68,10 +92,7 @@ def create_synset_for_class(category:str,df,n_synthetic=30,sampler=sample_synthe
         all_data.append(torch_array)
         class_list.append(anocat)
         
-        
-
-        new_samples=sampler(torch_array,n_synthetic=n_synthetic)
-        
+        new_samples=sampler_function(torch_array,n_synthetic=n_synthetic)
         
         all_data.append(new_samples)
         class_list.append(anocat+'_synthetic')
