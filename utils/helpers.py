@@ -21,7 +21,6 @@ def sample_synthetic_add_gauss(torch_array,n_synthetic=30):
         
         random_row = torch_array[torch.randint(0, torch_array.size(0), (1,)).item()]
         
-        
         #test with shift
         #row=random_row+shift
         
