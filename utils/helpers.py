@@ -11,20 +11,26 @@ from torch.utils.data import TensorDataset, DataLoader
 def sample_synthetic_add_gauss(torch_array,n_synthetic=30):
     # sampling from test set an add gaussian noise to it
     
-    # test with shift
-    # shift=torch.full((torch_array.size(1),), 0.1)
+
     
     means=torch.zeros(torch_array.size(1))
     stds=torch.sqrt(torch_array.var(dim=0))
+    
+    
+    # # test with shift
+    # shift=torch.full((torch_array.size(1),), 0.1)
+    # stds=torch_array.var(dim=0)**8
+
     rows = []
     for _ in range(n_synthetic):
         
         random_row = torch_array[torch.randint(0, torch_array.size(0), (1,)).item()]
         
-        #test with shift
-        #row=random_row+shift
         
         row = random_row+torch.normal(means, stds)
+        
+        # #test with shift
+        # row=random_row+shift
         
         rows.append(row)
         
