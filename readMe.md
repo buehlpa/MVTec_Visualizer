@@ -13,3 +13,5 @@ navigate to the data directory and download & extract the data  with:
 ```
 wget https://www.mydrive.ch/shares/38536/3830184030e49fe74747669442f0f282/download/420938113-1629952094/mvtec_anomaly_detection.tar.xz && tar -xf mvtec_anomaly_detection.tar.xz
 ```
+### Funky Visualization with a Treemap
+![image](https://github.com/buehlpa/MVTec_Visualizer/assets/64488738/563f0eff-1192-4667-aa31-e8114f1ea681)
