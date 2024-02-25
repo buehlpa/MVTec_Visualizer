@@ -1,4 +1,6 @@
 ## MVTEC AD
+
+
 dataset from https://www.mvtec.com/company/research/datasets/mvtec-ad/
 
 - visualize data in embeddingspace on tensorboard with TSNE, UMAP and PCA
@@ -15,3 +17,6 @@ wget https://www.mydrive.ch/shares/38536/3830184030e49fe74747669442f0f282/downlo
 ```
 ### Funky Visualization with a Treemap
 ![image](https://github.com/buehlpa/MVTec_Visualizer/assets/64488738/563f0eff-1192-4667-aa31-e8114f1ea681)
+
+### PCA with tensorboard 
+![image](https://github.com/buehlpa/MVTec_Visualizer/assets/64488738/4e55d536-e8c2-4d26-8e69-3985e9e6f2d1)
